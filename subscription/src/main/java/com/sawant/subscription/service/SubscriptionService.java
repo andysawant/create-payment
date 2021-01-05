@@ -2,20 +2,16 @@ package com.sawant.subscription.service;
 
 import com.sawant.subscription.model.Subscription;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-
 import static java.util.Map.entry;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
@@ -43,8 +39,14 @@ public class SubscriptionService {
 
         return request.bodyToMono(Subscription.class)
                 .flatMap(subscription -> {
-                    LocalDate startDate=LocalDate.of(subscription.getStartDate().getYear(),subscription.getStartDate().getMonth(),subscription.getStartDate().getDate());
-                    LocalDate endDate=LocalDate.of(subscription.getEndDate().getYear(),subscription.getEndDate().getMonth(),subscription.getEndDate().getDate());
+                    Calendar startc=Calendar.getInstance();
+                    startc.setTime(subscription.getStartDate());
+                    LocalDate startDate=LocalDate.of(startc.get(Calendar.YEAR),startc.get(Calendar.MONTH),startc.get(Calendar.DATE));
+
+                    Calendar endc=Calendar.getInstance();
+                    endc.setTime(subscription.getEndDate());
+                    LocalDate endDate=LocalDate.of(endc.get(Calendar.YEAR),endc.get(Calendar.MONTH),endc.get(Calendar.DATE));
+
                     if(ChronoUnit.MONTHS.between(startDate,endDate)>3){
                         return ServerResponse.badRequest().body(fromValue("Time Period should be below 3 months."));
                     }
@@ -53,8 +55,8 @@ public class SubscriptionService {
                         c1.set(Calendar.DAY_OF_MONTH, startDate.getDayOfMonth());
                         for(int i=1;i<=3;i++) {
                             Calendar c2 = Calendar.getInstance();
-                            c2.set(Calendar.DAY_OF_MONTH, c1.getTime().getDate());
-                            c2.set(Calendar.MONTH, c1.getTime().getMonth());
+                            c2.set(Calendar.DAY_OF_MONTH, c1.get(Calendar.DATE));
+                            c2.set(Calendar.MONTH, c1.get(Calendar.MONTH));
                             c2.add(Calendar.MONTH, i);
                             invoiceDates.add(simpleDateFormat.format(c2.getTime()));
                             subscription.setInvoiceDates(invoiceDates);
