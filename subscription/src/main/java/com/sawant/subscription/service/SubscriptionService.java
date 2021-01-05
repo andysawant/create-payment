@@ -55,7 +55,7 @@ public class SubscriptionService {
                         c1.set(Calendar.DAY_OF_MONTH, startDate.getDayOfMonth());
                         for(int i=1;i<=3;i++) {
                             Calendar c2 = Calendar.getInstance();
-                            c2.set(Calendar.DAY_OF_MONTH, c1.get(Calendar.DATE));
+                            c2.set(Calendar.DAY_OF_MONTH, Integer.parseInt(subscription.getDay()));
                             c2.set(Calendar.MONTH, c1.get(Calendar.MONTH));
                             c2.add(Calendar.MONTH, i);
                             invoiceDates.add(simpleDateFormat.format(c2.getTime()));
