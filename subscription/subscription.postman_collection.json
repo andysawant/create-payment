@@ -1,0 +1,159 @@
+{
+	"info": {
+		"_postman_id": "ca480fd8-ced1-4c1f-b597-3c8b4644d6b0",
+		"name": "subscription",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "manage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/app/subscription/manage",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"app",
+						"subscription",
+						"manage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "monthly successful",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\":10,\n    \"subscriptionType\":\"MONTHLY\",\n    \"day\":\"20\",\n    \"startDate\":\"2021-02-15\",\n    \"endDate\":\"2021-05-15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/app/subscription/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"app",
+						"subscription",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "weekly successful",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\":10,\n    \"subscriptionType\":\"WEEKLY\",\n    \"day\":\"TUESDAY\",\n    \"startDate\":\"2021-02-15\",\n    \"endDate\":\"2021-05-15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/app/subscription/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"app",
+						"subscription",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "more than 3 months timeperiod",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\":10,\n    \"subscriptionType\":\"WEEKLY\",\n    \"day\":\"TUESDAY\",\n    \"startDate\":\"2021-02-15\",\n    \"endDate\":\"2021-07-15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/app/subscription/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"app",
+						"subscription",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid subscription type",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\":10,\n    \"subscriptionType\":\"WEEKLYA\",\n    \"day\":\"TUESDAY\",\n    \"startDate\":\"2021-02-15\",\n    \"endDate\":\"2021-03-15\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/app/subscription/v1/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"app",
+						"subscription",
+						"v1",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

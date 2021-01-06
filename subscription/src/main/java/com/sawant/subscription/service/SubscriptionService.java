@@ -1,6 +1,7 @@
 package com.sawant.subscription.service;
 
 import com.sawant.subscription.model.Subscription;
+import com.sawant.subscription.util.SubscriptionUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -12,7 +13,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import static java.util.Map.entry;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @Service
@@ -23,22 +23,14 @@ public class SubscriptionService {
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-
-    private static Map<String,Integer> dayValueMap=Map.ofEntries(
-            entry("SUNDAY",1),
-            entry("MONDAY",2),
-            entry("TUESDAY",3),
-            entry("WEDNESDAY",4),
-            entry("THURSDAY",5),
-            entry("FRIDAY",6),
-            entry("SATURDAY",7)
-    );
-
     public Mono<ServerResponse> createSubscription(ServerRequest request) {
         List<String> invoiceDates = new ArrayList<>();
 
         return request.bodyToMono(Subscription.class)
                 .flatMap(subscription -> {
+                    if(!SubscriptionUtil.validateSubscription(subscription).isEmpty()){
+                        return ServerResponse.badRequest().body(fromValue(SubscriptionUtil.validateSubscription(subscription)));
+                    }
                     Calendar startc=Calendar.getInstance();
                     startc.setTime(subscription.getStartDate());
                     LocalDate startDate=LocalDate.of(startc.get(Calendar.YEAR),startc.get(Calendar.MONTH),startc.get(Calendar.DATE));
@@ -47,9 +39,6 @@ public class SubscriptionService {
                     endc.setTime(subscription.getEndDate());
                     LocalDate endDate=LocalDate.of(endc.get(Calendar.YEAR),endc.get(Calendar.MONTH),endc.get(Calendar.DATE));
 
-                    if(ChronoUnit.MONTHS.between(startDate,endDate)>3){
-                        return ServerResponse.badRequest().body(fromValue("Time Period should be below 3 months."));
-                    }
                     if(subscription.getSubscriptionType().equalsIgnoreCase(MONTHLY_SUBSCRIPTION)){
                         Calendar c1 = Calendar.getInstance();
                         c1.set(Calendar.DAY_OF_MONTH, startDate.getDayOfMonth());
@@ -62,10 +51,6 @@ public class SubscriptionService {
                             subscription.setInvoiceDates(invoiceDates);
                         }
                     }else if(subscription.getSubscriptionType().equalsIgnoreCase(WEEKLY_SUBSCRIPTION)){
-
-                        if(dayValueMap.get(subscription.getDay().toUpperCase())==null){
-                            return ServerResponse.badRequest().body(fromValue("Invalid Day provided."));
-                        }
 
                         LocalDate stDate = startDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(subscription.getDay().toUpperCase())));
 
