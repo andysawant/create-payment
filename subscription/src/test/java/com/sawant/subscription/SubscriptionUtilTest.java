@@ -36,4 +36,21 @@ public class SubscriptionUtilTest {
 
     assertTrue(errorList.isEmpty());
     }
+
+    @Test
+    public void testInvalidSubscription() throws Exception{
+        Subscription sub = new Subscription();
+        sub.setAmount(10);
+        sub.setSubscriptionType("WEEKLYa");
+        sub.setDay("TUESDAY");
+        String sDate1="15/02/2021";
+        Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
+        sub.setStartDate(date1);
+        String sDate2="15/02/2021";
+        Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(sDate2);
+        sub.setEndDate(date2);
+        List<String> errorList = subscriptionUtil.validateSubscription(sub);
+
+        assertTrue(!errorList.isEmpty());
+    }
 }
